@@ -55,7 +55,7 @@ def main() -> None:
         print(f'{CONFIG_FILENAME} not found, read documentation on how to create one.')
         return
 
-    with open(CONFIG_FILENAME, 'r') as i:
+    with open(CONFIG_FILENAME, 'r', encoding='utf-8') as i:
         try:
             config_data = json.loads(i.read())
         except ValueError as e:
