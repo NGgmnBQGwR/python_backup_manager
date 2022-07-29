@@ -66,7 +66,6 @@ def main() -> None:
     if not password:
         print('Empty password is not allowed.')
         return
-
     
     backup_entries = config_data.get('backup_entries')
     backup_objects = [Backup(**data) for data in backup_entries]
