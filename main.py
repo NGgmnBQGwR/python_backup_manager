@@ -22,7 +22,7 @@ CONFIG_FILENAME = 'config.json'
 SEVEN_ZIP_PATH = r'c:\Program Files\7-Zip\7z.exe'
 
 
-def create_backup(backup: Backup):
+def create_backup(backup: Backup, password: str):
     """
     Запускает 7zip для создания архива с содержимым, указанным в объекте backup.
     """
@@ -36,7 +36,7 @@ def create_backup(backup: Backup):
         '-bb3',
         backup.hide_contents_flag,
         *backup.excluded_files,
-        f'-p{PASSWORD}',
+        f'-p{password}',
     ]))
     print(command)
     result = subprocess.run(command, capture_output=True)
@@ -77,7 +77,7 @@ def main() -> None:
         return
     for backup in selected_backups:
         print(f"Making a backup of '{backup.name}'...")
-        result = create_backup(backup)
+        result = create_backup(backup, password)
         print(result.stdout.decode('utf-8'))
         if result.returncode:
             print('ERROR')
