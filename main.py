@@ -91,8 +91,9 @@ def main() -> None:
             print('Return code:', result.returncode)
             print(result.stderr.decode('utf-8'))
             return
-    input('Completed.')
+    print('Completed.')
 
 
 if __name__ == "__main__":
     main()
+    input('Press any key to exit.')
