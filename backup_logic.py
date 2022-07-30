@@ -34,5 +34,13 @@ class Backup():
         new_path = f'{name}_{date}{ext}'
         return new_path
 
+    def some_sources_missing(self):
+        missing = False
+        for source in self.sources:
+            if not os.path.exists(source):
+                missing = True
+                print(f'ERROR: Path "{source}" does not exist.')
+        return missing
+
     def __str__(self) -> str:
         return self.name

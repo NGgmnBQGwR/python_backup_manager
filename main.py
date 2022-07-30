@@ -80,6 +80,10 @@ def main() -> None:
         return
     for backup in selected_backups:
         print(f"Making a backup of '{backup.name}'...")
+
+        if backup.some_sources_missing():
+            return
+
         result = create_backup(backup, seven_zip_path, password)
         print(result.stdout.decode('utf-8'))
         if result.returncode:
