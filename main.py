@@ -1,10 +1,9 @@
 """Бекапер с помощью 7z.
 
 Способ использования:
-1. Указать путь к 7z.exe в SEVEN_ZIP_PATH
-2. Создать файл config.json (используя config_example.json как пример).
-3. Заполнить в нём поля "password" и "backup_entries".
-4. Запустить main.py
+1. Создать файл config.json (используя config_example.json как пример).
+2. Заполнить в нём нужные поля.
+3. Запустить main.py
 
 Требования:
 Python 3.10
@@ -19,15 +18,14 @@ from console_selector import ConsoleSelect
 from backup_logic import Backup
 
 CONFIG_FILENAME = 'config.json'
-SEVEN_ZIP_PATH = r'c:\Program Files\7-Zip\7z.exe'
 
 
-def create_backup(backup: Backup, password: str):
+def create_backup(backup: Backup, seven_zip_path: str, password: str):
     """
     Запускает 7zip для создания архива с содержимым, указанным в объекте backup.
     """
     command = list(filter(None, [
-        SEVEN_ZIP_PATH,
+        seven_zip_path,
         'a',
         backup.target_with_date,
         *backup.sources,
@@ -47,10 +45,6 @@ def main() -> None:
     """
     Показывает все доступные пункты и делает бекап выбранных.
     """
-    if not os.path.exists(SEVEN_ZIP_PATH):
-        print('7z.exe not found, check your SEVEN_ZIP_PATH path.')
-        return
-
     if not os.path.exists(CONFIG_FILENAME):
         print(f'{CONFIG_FILENAME} not found, read documentation on how to create one.')
         return
@@ -61,10 +55,20 @@ def main() -> None:
         except ValueError as e:
             print(f'Bad JSON in {CONFIG_FILENAME}: \n {str(e)}')
             return
+
     password = config_data.get('password')
+    seven_zip_path = config_data.get('7z_path')
 
     if not password:
         print('Empty password is not allowed.')
+        return
+
+    if not seven_zip_path:
+        print('Empty 7z_path is not allowed.')
+        return
+
+    if not os.path.exists(seven_zip_path):
+        print('7z.exe not found, check your 7z_path variable.')
         return
     
     backup_entries = config_data.get('backup_entries')
@@ -76,7 +80,7 @@ def main() -> None:
         return
     for backup in selected_backups:
         print(f"Making a backup of '{backup.name}'...")
-        result = create_backup(backup, password)
+        result = create_backup(backup, seven_zip_path, password)
         print(result.stdout.decode('utf-8'))
         if result.returncode:
             print('ERROR')
