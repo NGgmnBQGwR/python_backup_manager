@@ -78,6 +78,7 @@ def main() -> None:
     if not selected_backups:
         print('Nothing selected')
         return
+
     for backup in selected_backups:
         print(f"Making a backup of '{backup.name}'...")
 
